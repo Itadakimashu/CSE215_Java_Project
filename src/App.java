@@ -1,6 +1,7 @@
+import java.io.*;
 import java.util.ArrayList;
 
-abstract class User {
+abstract class User implements Serializable{
     private String name;
     private String contactNumber;
     private String email;
@@ -101,18 +102,76 @@ class Rider extends User{
     
 }
 
+class Customer extends User{
 
 
 
+    @Override
+    public void delete_request() {
+        return;
+    }
 
-public class App {
-    public static ArrayList<Rider> riders = new ArrayList<Rider>();
-    public static void main(String[] args){
-        User user = new Rider("Fazly","01823333484","fazlyfardin@gmail.com");
-        riders.add((Rider) user);
+    @Override
+    public void view_request() {
+        return;
+    }
+
+    @Override
+    public void edit_request() {
+        return;
+    }
+
+    @Override
+    public void view_profile() {
+        return;
+    }
     
+}
+
+
+
+
+
+public class App implements Serializable{
+    public static ArrayList<Rider> riders = new ArrayList<Rider>();
+    public static String rider_file = "riders.bin";
+    public static void main(String[] args){
+        
+        load_riders_from_bin();
         for(Rider r: riders){
             System.out.println(r);
         }
+    }
+
+    public static void save_riders_to_bin(){
+        try {
+			FileOutputStream fos = new FileOutputStream(rider_file);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(riders);
+            System.out.println(riders + "\nhave been saved to the file");
+			os.close();
+			
+		}
+		catch(IOException e){
+			System.out.println("An error occured");
+			e.printStackTrace();
+		}
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void load_riders_from_bin(){
+        try{
+			FileInputStream fis = new FileInputStream(rider_file);
+			ObjectInputStream is = new ObjectInputStream(fis);
+
+			riders = (ArrayList<Rider>) is.readObject();
+            System.out.println("The array of objects "+ riders + " has been loaded to riders");
+            is.close();
+			
+		}
+		catch(IOException | ClassNotFoundException IoCnfe){
+			System.out.println("An error occured");
+			IoCnfe.printStackTrace();
+		}
     }
 }
