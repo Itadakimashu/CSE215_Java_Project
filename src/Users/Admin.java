@@ -1,20 +1,22 @@
 package Users;
 
+import java.util.ArrayList;
 
 public class Admin extends User{
-
-    public Admin(String name, String contactNumber, String email){
-        super(name,contactNumber,email);
+    private int password;
+    public Admin(int password){
+        super("admin","991","admistrator@email.com");
+        this.password = password;
     }
 
     @Override
     public void delete_request() {
-        return;
+        
     }
 
     @Override
-    public void view_request() {
-        return;
+    public String[][] view_request() {
+        return null;
     }
 
     @Override

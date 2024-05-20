@@ -3,18 +3,42 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import Users.*;
+import GUI.*;
 
 public class App implements Serializable{
     public static ArrayList<Rider> riders = new ArrayList<Rider>();
     public static String rider_file = "riders.bin";
+
+    public static ArrayList<Customer> customers = new ArrayList<Customer>();
+    public static String customer_file = "customers.bin";
+
+    public static Gui gui = new Gui();
     public static void main(String[] args){
 
-        load_riders_from_bin();
         // createRider();
-        System.out.println(riders);
+        load_riders_from_bin();
+        load_customers_from_bin();
+        Customer c = customers.get(0);
+        Rider r = riders.get(0);
 
-        Customer c = new Customer("fazly","01823421","fazly@gmail.com");
-        c.request_ride(riders, "Gaza", "West Bank");
+        // c.request_ride(riders, "Gaza", "West Bank");
+        // c.finish_ride();
+
+        
+
+        // c.request_ride(riders, "Utopia", "West Bank");
+        // String data[][] = c.view_request();
+        // c.finish_ride();
+
+        // r.updataLocation("West Bank");
+
+        // System.out.println(r.getLocation());
+
+        // save_riders_to_bin();
+        
+        String data[][] = r.view_request();
+        gui.view_show(data,"Customer");
+        
     }
 
     public static void createRider(){
@@ -77,5 +101,37 @@ public class App implements Serializable{
 			System.out.println("An error occured");
 			IoCnfe.printStackTrace();
 		}
+    }
+
+
+    public static void save_customers_to_bin(){
+        try {
+            FileOutputStream fos = new FileOutputStream(customer_file,false);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(customers);
+            System.out.println(customers + "\nhave been saved to the file");
+
+            os.close();
+        }
+        catch(IOException e){
+            System.out.println("An error occured");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void load_customers_from_bin(){
+        try{
+            FileInputStream fis = new FileInputStream(customer_file);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            customers = (ArrayList<Customer>) is.readObject();
+            System.out.println("The array of objects "+ customers + " has been loaded to customers");
+            is.close();
+        }
+        catch(IOException | ClassNotFoundException IoCnfe){
+            System.out.println("An error occured");
+            IoCnfe.printStackTrace();
+        }
+        
     }
 }

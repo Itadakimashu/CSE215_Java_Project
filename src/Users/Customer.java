@@ -40,14 +40,35 @@ public class Customer extends User{
         System.out.println("going from " + currentRide.fromLocation + " to " + currentRide.toLocation);
     }
 
-    @Override
-    public void delete_request() {
-        return;
+    public void finish_ride(){
+        currentRide.update("finished");
+        currentRide.rider.finish_ride(currentRide);
+        wallet -= currentRide.fare;
+        currentRide = null;
+        System.out.println("Ride finished");
+
     }
 
     @Override
-    public void view_request() {
-        System.out.println("Rider: ");
+    public void delete_request() {
+        currentRide.update("Cancelled");
+        currentRide = null;
+        System.out.println("The ride has been cancelled.");
+    }
+
+    @Override
+    public String[][] view_request() {
+        
+        if(currentRide == null){
+            System.out.println("Not currently on a ride.");
+            return null;
+        }
+        String data[][] = {{"1",currentRide.rider.toString(), currentRide.fromLocation, currentRide.toLocation, String.valueOf(currentRide.fare), currentRide.progress}};
+        System.out.println("from: " + currentRide.fromLocation);
+        System.out.println("To: " + currentRide.toLocation);
+        System.out.println("Rider: " + currentRide.rider);
+        return data;
+
     }
 
     @Override

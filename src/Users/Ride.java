@@ -1,12 +1,24 @@
 package Users;
 
-public class Ride{
+import java.io.Serializable;
+
+public class Ride implements Serializable{
     String fromLocation;
-    String destination;
+    String toLocation;
+    Customer customer;
+    Rider rider;
     double fare;
-    public Ride(String fromLocation, String destination) {
+    String progress;
+    public Ride(Customer customer, Rider rider,String fromLocation, String toLocation) {
+        this.customer = customer;
+        this.rider = rider;
         this.fromLocation = fromLocation;
-        this.destination = destination;
+        this.toLocation = toLocation;
+        fare = 180.0;
+        this.progress = "Ongoing";
+    }
+    public void update(String progress) {
+       this.progress = progress;
     }
     
 }

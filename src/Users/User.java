@@ -27,8 +27,18 @@ abstract class User implements Serializable{
         this.email = email;
     }
 
+    public String getName(){
+        return this.name;
+    }
+    public String getContactNumber(){
+        return this.contactNumber;
+    }
+    public String getEmail(){
+        return this.email;
+    }
+
     public abstract void delete_request();
-    public abstract void view_request();
+    public abstract String[][] view_request();
     public abstract void edit_request();
     public abstract void view_profile();
 
