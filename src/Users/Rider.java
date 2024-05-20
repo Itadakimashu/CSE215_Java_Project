@@ -48,12 +48,16 @@ public class Rider extends User{
 
     public Ride accept_ride(Customer customer,String currentLocation, String destination){
         Ride ride = new Ride(customer,this,currentLocation,destination);
+        rides.add(ride);
         return ride;
     }
 
     public void finish_ride(Ride ride){
-        rides.add(ride);
-        updataLocation(ride.toLocation);
+        if(rides.get(rides.size()-1) == ride){
+            rides.get(rides.size()-1).update("finished");
+            updataLocation(ride.toLocation);
+        }
+        
     }
 
 
@@ -75,20 +79,24 @@ public class Rider extends User{
             data[i][3] = rides.get(i).toLocation;
             data[i][4] = String.valueOf(rides.get(i).fare);
             data[i][5] = rides.get(i).progress;
-            System.out.println(rides.get(i).progress);
-            // System.out.println(data[i]);
         }
         return data;
     }
 
     @Override
-    public void edit_request() {
-        return;
+    public void edit_request(Object editedRider) {
+        Rider r = (Rider)editedRider;
+        if(this.getName() != r.getName() && !r.getName().isEmpty()) 
+            this.setName(r.getName());
+
+        if(this.getContactNumber() != r.getContactNumber() && !r.getContactNumber().isEmpty()) 
+            this.setContactNumber(r.getContactNumber());
+        
+        if(this.getEmail() != r.getEmail() && !r.getEmail().isEmpty())
+            this.setEmail(r.getEmail());
+        
+        System.out.println("Updated Rider infromation");
     }
 
-    @Override
-    public void view_profile(){
-        return;
-    }
     
 }

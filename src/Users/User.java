@@ -2,7 +2,7 @@ package Users;
 
 import java.io.Serializable;
 
-abstract class User implements Serializable{
+public abstract class User implements Serializable{
     private String name;
     private String contactNumber;
     private String email;
@@ -39,8 +39,7 @@ abstract class User implements Serializable{
 
     public abstract void delete_request();
     public abstract String[][] view_request();
-    public abstract void edit_request();
-    public abstract void view_profile();
+    public abstract void edit_request(Object user);
 
     public String toString(){
         return name;

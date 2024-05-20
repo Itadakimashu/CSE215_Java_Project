@@ -1,7 +1,5 @@
 package Users;
 
-import java.util.ArrayList;
-
 public class Admin extends User{
     private int password;
     public Admin(int password){
@@ -20,14 +18,19 @@ public class Admin extends User{
     }
 
     @Override
-    public void edit_request() {
-        return;
-    }
+    public void edit_request(Object editedCustomer) {
+        Admin ad = (Admin)editedCustomer;
+        if(this.getName() != ad.getName() && ad.getName() != "") 
+            this.setName(ad.getName());
 
-    public void view_profile(){
-        return;
+        if(this.getContactNumber() != ad.getContactNumber() && ad.getContactNumber() != "") 
+            this.setContactNumber(ad.getContactNumber());
+        
+        if(this.getEmail() != ad.getEmail() && ad.getEmail() != "")
+            this.setEmail(ad.getEmail());
+        
+        System.out.println("Updated Admin infromation");
     }
-
-    
+ 
     
 }

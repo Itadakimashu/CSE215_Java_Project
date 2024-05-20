@@ -24,19 +24,19 @@ public class Customer extends User{
     }
 
     public void request_ride(ArrayList<Rider> riders,String currentLocation, String toLocation){
-        Rider r = null;
+        Rider c = null;
         for(Rider x: riders){
             if (currentLocation.equals(x.getLocation())){
-                r = x;
+                c = x;
             }
         }
 
-        if (r == null){
+        if (c == null){
             System.out.println("No rider found");
             return;
         }
 
-        currentRide = r.accept_ride(this,currentLocation,toLocation);
+        currentRide = c.accept_ride(this,currentLocation,toLocation);
         System.out.println("going from " + currentRide.fromLocation + " to " + currentRide.toLocation);
     }
 
@@ -72,13 +72,21 @@ public class Customer extends User{
     }
 
     @Override
-    public void edit_request() {
-        return;
-    }
+    public void edit_request(Object editedCustomer) {
+        Customer c = (Customer)editedCustomer;
+        if(this.getName() != c.getName() && !c.getName().isEmpty()){
+            this.setName(c.getName());
+        }
 
-    @Override
-    public void view_profile() {
-        return;
+        if(this.getContactNumber() != c.getContactNumber() && !c.getContactNumber().isEmpty()){ 
+            this.setContactNumber(c.getContactNumber());
+        }
+        
+        if(this.getEmail() != c.getEmail() && !c.getEmail().isEmpty()){
+            this.setEmail(c.getEmail());
+        }
+        
+        System.out.println("Updated Customer information");
     }
     
 }

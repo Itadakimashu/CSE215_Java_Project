@@ -5,6 +5,7 @@ import java.util.Scanner;
 import Users.*;
 import GUI.*;
 
+
 public class App implements Serializable{
     public static ArrayList<Rider> riders = new ArrayList<Rider>();
     public static String rider_file = "riders.bin";
@@ -12,32 +13,40 @@ public class App implements Serializable{
     public static ArrayList<Customer> customers = new ArrayList<Customer>();
     public static String customer_file = "customers.bin";
 
+    public static String state = "view";
+
     public static Gui gui = new Gui();
     public static void main(String[] args){
 
-        // createRider();
         load_riders_from_bin();
         load_customers_from_bin();
+        
         Customer c = customers.get(0);
         Rider r = riders.get(0);
 
-        // c.request_ride(riders, "Gaza", "West Bank");
-        // c.finish_ride();
+        if(state.equals("requestRide")){
+            gui.request_rider(c,riders);
+            // gui.view_show(c);
+            // c.finish_ride();
+            // gui.view_show(r);
+            save_customers_to_bin();
+            save_riders_to_bin(); 
+        }
 
-        
+        if(state.equals("edit")){
+            gui.edit_user(r);
+            save_riders_to_bin();
+            save_customers_to_bin();
+        }
 
-        // c.request_ride(riders, "Utopia", "West Bank");
-        // String data[][] = c.view_request();
-        // c.finish_ride();
+        if(state.equals("view")){
+            gui.view_rides(r);
+        }
+        if(state.equals("view_profile")){
+            gui.view_profile(c);
+        }
 
-        // r.updataLocation("West Bank");
 
-        // System.out.println(r.getLocation());
-
-        // save_riders_to_bin();
-        
-        String data[][] = r.view_request();
-        gui.view_show(data,"Customer");
         
     }
 
@@ -46,9 +55,6 @@ public class App implements Serializable{
         String name;
         String contactNumber;
         String email;
-        // String vehical;
-        // String vehicalModel;
-        // int numberPlate;
         String currentLocation;
         System.out.println("Enter Rider name: ");
         name = sc.nextLine();
@@ -56,12 +62,6 @@ public class App implements Serializable{
         contactNumber = sc.nextLine();
         System.out.println("Enter Email: ");
         email = sc.nextLine();
-        // System.out.println("Enter vechial: ");
-        // vehical = sc.nextLine();
-        // System.out.println("Enter vechial model: ");
-        // vehicalModel = sc.nextLine();
-        // System.out.println("Enter number plate: ");
-        // numberPlate = sc.nextInt();
         System.out.println("Enter current location: ");
         currentLocation = sc.nextLine();
         Rider r = new Rider(name, contactNumber, email, currentLocation);
