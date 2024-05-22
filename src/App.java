@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Users.*;
 import GUI.*;
@@ -13,61 +12,122 @@ public class App implements Serializable{
     public static ArrayList<Customer> customers = new ArrayList<Customer>();
     public static String customer_file = "customers.bin";
 
-    public static String state = "view";
-
+    public static String state = "homepage";
+ 
     public static Gui gui = new Gui();
+
     public static void main(String[] args){
 
         load_riders_from_bin();
         load_customers_from_bin();
         
-        Customer c = customers.get(0);
-        Rider r = riders.get(0);
+        // Customer c = new Customer();
+        // Rider r = new Rider();
 
-        if(state.equals("requestRide")){
-            gui.request_rider(c,riders);
-            // gui.view_show(c);
-            // c.finish_ride();
-            // gui.view_show(r);
-            save_customers_to_bin();
-            save_riders_to_bin(); 
+        User user = null;
+
+        while(!state.equals("exit")){
+
+            if(state.equals("homepage")){
+                state = gui.homepage();
+            }
+
+            else if(state.equals("create_customer")){
+                Customer customer = gui.create_customer();
+                if(customer == null){
+                    System.out.println("failed to create customer");
+                }
+                else {
+                    customers.add(customer);
+                    save_customers_to_bin();
+                }
+                state = "homepage";
+            }
+
+            else if(state.equals("create_rider")){
+                Rider rider = gui.create_rider();
+                if(rider == null){
+                    System.out.println("failed to create rider");
+                }
+                else {
+                    riders.add(rider);
+                    save_riders_to_bin();
+                }
+                
+                state = "homepage";
+            }
+
+            else if(state.equals("login_customer")){
+                user = null;
+                user = gui.login(customers);
+                if(user != null) state = "main_menu";
+                else state = "homepage";
+            }
+
+            else if(state.equals("login_rider")){
+                user = null;
+                user = gui.login(riders);
+                if(user != null) state = "main_menu";
+                else state = "homepage";
+            }
+
+            else if(state.equals("delete_customer")){
+                state = gui.delete_user (customers);
+                save_customers_to_bin();
+            }
+
+            else if(state.equals("delete_rider")){
+                state = gui.delete_user (riders);
+                save_riders_to_bin();
+            }
+
+            else if(state.equals("main_menu")){
+                state = gui.main_menu(user);
+            }
+    
+            else if(state.equals("request_ride")){
+                gui.request_rider((Customer)user,riders);
+                state = "main_menu";
+    
+            }
+    
+            else if(state.equals("finish_ride")){
+                user.finish_ride();
+                save_customers_to_bin();
+                save_riders_to_bin();
+                state = "main_menu";
+            }
+    
+            else if(state.equals("delete_request")){
+                user.delete_request();
+                save_customers_to_bin();
+                save_riders_to_bin();
+                state = "main_menu";
+            }
+    
+            else if(state.equals("edit_profile")){
+                gui.edit_user(user);
+                save_riders_to_bin();
+                save_customers_to_bin();
+                state = "main_menu";
+            }
+    
+            else if(state.equals("view_ride")){
+                state = gui.view_rides(user);
+            }
+
+            else if(state.equals("view_profile")){
+                gui.view_profile(user);
+                state = "main_menu";
+            }
+
+            else{
+                System.out.println(state);
+                state = "exit";
+            }
+    
         }
-
-        if(state.equals("edit")){
-            gui.edit_user(r);
-            save_riders_to_bin();
-            save_customers_to_bin();
-        }
-
-        if(state.equals("view")){
-            gui.view_rides(r);
-        }
-        if(state.equals("view_profile")){
-            gui.view_profile(c);
-        }
-
-
         
-    }
-
-    public static void createRider(){
-        Scanner sc = new Scanner(System.in);
-        String name;
-        String contactNumber;
-        String email;
-        String currentLocation;
-        System.out.println("Enter Rider name: ");
-        name = sc.nextLine();
-        System.out.println("Contact Number: ");
-        contactNumber = sc.nextLine();
-        System.out.println("Enter Email: ");
-        email = sc.nextLine();
-        System.out.println("Enter current location: ");
-        currentLocation = sc.nextLine();
-        Rider r = new Rider(name, contactNumber, email, currentLocation);
-        riders.add(r);
-        save_riders_to_bin();
-        sc.close();
     }
 
 

@@ -3,12 +3,12 @@ package Users;
 import java.io.Serializable;
 
 public class Ride implements Serializable{
-    String fromLocation;
-    String toLocation;
-    Customer customer;
-    Rider rider;
-    double fare;
-    String progress;
+    public String fromLocation;
+    public String toLocation;
+    public Customer customer;
+    public Rider rider;
+    public double fare;
+    public String progress;
 
     private static double fare_matrix[][] = {
         {0, 25, 55, 80, 100},

@@ -24,25 +24,25 @@ public class Customer extends User{
     }
 
     public void request_ride(ArrayList<Rider> riders,String currentLocation, String toLocation){
-        Rider c = null;
+        Rider u = null;
         for(Rider x: riders){
-            if (currentLocation.equals(x.getLocation())){
-                c = x;
+            if (!x.ride_status_ongoing() && currentLocation.equals(x.getLocation())){
+                u = x;
             }
         }
 
-        if (c == null){
+        if (u == null){
             System.out.println("No rider found");
             return;
         }
 
-        currentRide = c.accept_ride(this,currentLocation,toLocation);
+        currentRide = u.accept_ride(this,currentLocation,toLocation);
         System.out.println("going from " + currentRide.fromLocation + " to " + currentRide.toLocation);
     }
 
     public void finish_ride(){
-        currentRide.update("finished");
-        currentRide.rider.finish_ride(currentRide);
+        currentRide.update("Finished");
+        currentRide.rider.updataLocation(currentRide.toLocation);
         wallet -= currentRide.fare;
         currentRide = null;
         System.out.println("Ride finished");
@@ -61,7 +61,8 @@ public class Customer extends User{
         
         if(currentRide == null){
             System.out.println("Not currently on a ride.");
-            return null;
+            String data[][] = {{"","", "", "","", ""}};
+            return data;
         }
         String data[][] = {{"1",currentRide.rider.toString(), currentRide.fromLocation, currentRide.toLocation, String.valueOf(currentRide.fare), currentRide.progress}};
         System.out.println("from: " + currentRide.fromLocation);
@@ -73,20 +74,26 @@ public class Customer extends User{
 
     @Override
     public void edit_request(Object editedCustomer) {
-        Customer c = (Customer)editedCustomer;
-        if(this.getName() != c.getName() && !c.getName().isEmpty()){
-            this.setName(c.getName());
+        Customer u = (Customer)editedCustomer;
+        if(this.getName() != u.getName() && !u.getName().isEmpty()){
+            this.setName(u.getName());
         }
 
-        if(this.getContactNumber() != c.getContactNumber() && !c.getContactNumber().isEmpty()){ 
-            this.setContactNumber(c.getContactNumber());
+        if(this.getContactNumber() != u.getContactNumber() && !u.getContactNumber().isEmpty()){ 
+            this.setContactNumber(u.getContactNumber());
         }
         
-        if(this.getEmail() != c.getEmail() && !c.getEmail().isEmpty()){
-            this.setEmail(c.getEmail());
+        if(this.getEmail() != u.getEmail() && !u.getEmail().isEmpty()){
+            this.setEmail(u.getEmail());
         }
         
         System.out.println("Updated Customer information");
+    }
+
+    @Override
+    public boolean ride_status_ongoing() {
+       if(currentRide == null) return false;
+       return true;
     }
     
 }

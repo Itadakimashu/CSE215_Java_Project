@@ -52,9 +52,10 @@ public class Rider extends User{
         return ride;
     }
 
-    public void finish_ride(Ride ride){
-        if(rides.get(rides.size()-1) == ride){
-            rides.get(rides.size()-1).update("finished");
+    public void finish_ride(){
+        Ride ride = rides.get(rides.size()-1);
+        if(ride.progress.equals("Ongoing")){
+            rides.get(rides.size()-1).update("Finished");
             updataLocation(ride.toLocation);
         }
         
@@ -63,13 +64,22 @@ public class Rider extends User{
 
     @Override
     public void delete_request() {
-        return;
+        Ride ride = rides.get(rides.size()-1);
+        if(ride.progress.equals("Ongoing")){
+            ride.update("cancelled");
+            ride.customer.delete_request();
+        }
+        else{
+            System.out.println("no ongoing rides");
+        }
     }
 
     @Override
     public String[][] view_request() {
         if(rides.size() == 0){
-            return null;
+            System.out.println("The Rider did not make any rides yet.");
+            String data[][] = {{"","", "", "","", ""}};
+            return data;
         }
         String data[][] = new String[rides.size()][6];
         for(int i = 0; i < rides.size(); i++){
@@ -97,6 +107,18 @@ public class Rider extends User{
         
         System.out.println("Updated Rider infromation");
     }
+
+    public Ride last_ride() {
+        return rides.get(rides.size()-1);
+    }
+
+    @Override
+    public boolean ride_status_ongoing() {
+        if(rides.size() > 0 && last_ride().progress.equals("Ongoing")) return true;   
+        return false;
+    }
+
+
 
     
 }

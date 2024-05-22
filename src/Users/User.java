@@ -40,7 +40,8 @@ public abstract class User implements Serializable{
     public abstract void delete_request();
     public abstract String[][] view_request();
     public abstract void edit_request(Object user);
-
+    public abstract void finish_ride();
+    public abstract boolean ride_status_ongoing();
     public String toString(){
         return name;
     }
