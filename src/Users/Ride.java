@@ -37,12 +37,12 @@ public class Ride implements Serializable{
         return fare_matrix[index[0]][index[1]]; 
     }
     private int getIndex(String location) {
-        switch(location){
-            case "Gaza": return 0;
-            case "West Bank": return 1;
-            case "Rafa": return 2;
-            case "Al Aqsa": return 3;
-            case "Haifa": return 4;
+        switch(location.toLowerCase()){
+            case "gaza": return 0;
+            case "west bank": return 1;
+            case "rafah": return 2;
+            case "al aqsa": return 3;
+            case "haifa": return 4;
             default:
             return -1;
         }

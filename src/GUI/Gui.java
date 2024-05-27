@@ -1,10 +1,14 @@
 package GUI;
 import java.awt.event.*;
-import java.util.ArrayList;
-
 import javax.swing.*;
 import java.awt.*;
+
 import Users.*;
+import ExceptionError.ExceptionError;
+
+import java.util.ArrayList;
+
+
 
 
 public class Gui{
@@ -15,7 +19,7 @@ public class Gui{
     
     public String main_menu(User user) {
         state = "main_menu";
-        JDialog dialog = new JDialog((Frame) null, "Main Menu", true); // Create a modal JDialog
+        JDialog dialog = new JDialog((Frame) null, "Home", true); // Create a modal JDialog
         dialog.setLayout(new GridLayout(3, 2)); // Grid layout with 3 rows and 2 columns
     
         // Button 1
@@ -88,7 +92,7 @@ public class Gui{
         dialog.add(button6);
     
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(400, 300);
+        dialog.setSize(600, 400);
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
         return state;
@@ -100,6 +104,16 @@ public class Gui{
         JDialog dialog = new JDialog((Frame) null, "View Ride Details", true); // Create a modal JDialog
     
         String[][] data = user.view_request();
+
+        if(data == null){
+            JOptionPane.showMessageDialog(dialog, "Currently not on a ride");
+            System.out.println("Currently not on a ride");
+            return "main_menu";
+        }
+        else if(data.length == 0){
+            JOptionPane.showMessageDialog(dialog, "The Rider haven't made any ride yet.");
+            System.out.println("The Rider haven't made any rides yet.");
+        }
 
         String auth;
         if (user instanceof Rider) {
@@ -122,7 +136,7 @@ public class Gui{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                state = "delete_request";
+                state = "cancel_request";
                 dialog.dispose(); // Close the dialog when the button is pressed
             }
         });
@@ -214,16 +228,23 @@ public class Gui{
                 String name = textFieldName.getText();
                 String contactNumber = textFieldContactNumber.getText();
                 String email = textFieldEmail.getText();
-                User u;
-                if (user instanceof Rider)
-                    u = new Rider(name, contactNumber, email);
-                else if (user instanceof Customer)
-                    u = new Customer(name, contactNumber, email);
-                else
-                    u = null;
-                if(contactNumber.isEmpty()) System.out.println(1);
-                user.edit_request(u);
-                
+                try{
+                    User u;
+                    if (user instanceof Rider)
+                        u = new Rider(name, contactNumber, email);
+                    else if (user instanceof Customer)
+                        u = new Customer(name, contactNumber, email);
+                    else
+                        u = null;
+
+                    user.edit_request(u);
+                    JOptionPane.showMessageDialog(dialog, "User have been edited.");
+                }
+                catch(ExceptionError e1){
+                    System.out.println(e1.getMessage());
+                    JOptionPane.showMessageDialog(dialog, e1.getMessage());
+                }
+                    
                 dialog.dispose(); // Close the dialog
             }
         });
@@ -236,66 +257,86 @@ public class Gui{
     }
 
     
-    public void request_rider(Customer customer,ArrayList<Rider> riders) {
+    public void request_rider(Customer customer, ArrayList<Rider> riders) {
         JDialog dialog = new JDialog((Frame) null, "Request Rider", true); // Create a modal JDialog
-            
+    
+        // Load the map image
+        ImageIcon mapIcon = new ImageIcon("pic\\map.png");
+        JLabel mapLabel = new JLabel(mapIcon); // Create a JLabel to hold the image
+    
         JLabel fromLabel = new JLabel("From Location: ");
-        JTextField textFieldFrom = new JTextField(10); // Pre-fill with current user data
-        
+        String[] locations = {"Gaza", "West Bank", "Rafah", "Al Aqsa","Haifa"};
+        JComboBox<String> comboBoxFrom = new JComboBox<>(locations); // Dropdown list for from location
+    
         JLabel toLabel = new JLabel("To Location: ");
-        JTextField textFieldTo = new JTextField(10);
-        
+        JComboBox<String> comboBoxTo = new JComboBox<>(locations); // Dropdown list for to location
+    
         JButton button = new JButton("Request Rider");
     
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        
-        // Position the "From Location" label and text field
+    
+        // Position the map label
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(mapLabel, gbc);
+    
+        // Position the "From Location" label and dropdown list
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1; // Reset to one column
         gbc.insets = new Insets(10, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.WEST;
         panel.add(fromLabel, gbc);
     
         gbc.gridx = 1;
-        panel.add(textFieldFrom, gbc);
+        panel.add(comboBoxFrom, gbc);
     
-        // Position the "To Location" label and text field
+        // Position the "To Location" label and dropdown list
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         panel.add(toLabel, gbc);
     
         gbc.gridx = 1;
-        panel.add(textFieldTo, gbc);
-        
+        panel.add(comboBoxTo, gbc);
+    
         // Position the button
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2; // Span across two columns
         gbc.insets = new Insets(20, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(button, gbc);
-        
-        button.addActionListener(new ActionListener() {
+    
+        button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fromLocation = textFieldFrom.getText();
-                String toLocation = textFieldTo.getText();
-    
-                // Perform action to request a rider using the provided locations
-                // You might want to call a method like customer.requestRide(fromLocation, toLocation)
-                customer.request_ride(riders, fromLocation, toLocation);
+                String fromLocation = (String) comboBoxFrom.getSelectedItem();
+                String toLocation = (String) comboBoxTo.getSelectedItem();
+                
+                try {
+                    JOptionPane.showMessageDialog(dialog,"Searching for a rider...");
+                    customer.request_ride(riders, fromLocation, toLocation);
+                    JOptionPane.showMessageDialog(dialog, "Found a ride. you can view the details at view ride section.");
+                } catch (ExceptionError error) {
+                    System.out.println(error.getMessage());
+                    JOptionPane.showMessageDialog(dialog, error.getMessage());
+                }
+                
                 dialog.dispose(); // Close the dialog
             }
         });
     
         dialog.add(panel);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(600, 400);
+        dialog.setSize(600, 600); // Adjusted size to fit the map image
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
     }
-  
+
     
     public void view_profile(User user) {
         JDialog dialog = new JDialog((Frame) null, "View Profile", true); // Create a modal JDialog
@@ -303,6 +344,12 @@ public class Gui{
         JLabel nameLabel = new JLabel("Name: " + user.getName());
         JLabel contactLabel = new JLabel("Contact: " + user.getContactNumber());
         JLabel emailLabel = new JLabel("Email: " + user.getEmail());
+
+        JLabel locationLabel = null;
+        if (user instanceof Rider) {
+            Rider rider = (Rider) user;
+            locationLabel = new JLabel("Current Location: " + rider.getLocation());
+        }
     
         JButton closeButton = new JButton("Back");
     
@@ -320,12 +367,20 @@ public class Gui{
         gbc.gridy = 1;
         panel.add(contactLabel, gbc);
 
-        // Position the contact number label
+        // Position the email label
         gbc.gridy = 2;
         panel.add(emailLabel, gbc);
+
+
+        // Position the location label if the user is a Rider
+
+        if (locationLabel != null) {
+            gbc.gridy = 3;
+            panel.add(locationLabel, gbc);
+        }
     
         // Position the close button
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2; // Span across two columns
         gbc.insets = new Insets(20, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.CENTER;
@@ -340,7 +395,7 @@ public class Gui{
     
         dialog.add(panel);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(300, 200);
+        dialog.setSize(600, 400);
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
     }
@@ -484,7 +539,7 @@ public class Gui{
         dialog.add(button6);
     
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(400, 300);
+        dialog.setSize(600, 400);
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
         return state;
@@ -553,6 +608,9 @@ public class Gui{
 
                 if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty())
                     staticCustomer = new Customer(name,contactNumber,email);
+
+                if(staticCustomer != null) JOptionPane.showMessageDialog(dialog, "Customer created successfully");
+                else JOptionPane.showMessageDialog(dialog, "Couldn't create customer. Please check all information are provided.");
                 
                 // Assuming User is an abstract class or interface
                 // User user = new User(name, contactNumber, email, location);
@@ -646,11 +704,10 @@ public class Gui{
 
                 if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty() && !location.isEmpty())
                     staticRider = new Rider(name,contactNumber,email,location);
-                
-                // Assuming User is an abstract class or interface
-                // User user = new User(name, contactNumber, email, location);
-                // Assuming you have a method to add the user
-                // add_user(user);
+
+                if(staticRider != null) JOptionPane.showMessageDialog(dialog, "Rider created successfully");
+                else JOptionPane.showMessageDialog(dialog, "Couldn't create Rider. Please check all information are provided.");
+    
                 dialog.dispose(); // Close the dialog
             }
         });

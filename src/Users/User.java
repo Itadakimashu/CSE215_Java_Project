@@ -2,6 +2,8 @@ package Users;
 
 import java.io.Serializable;
 
+import ExceptionError.ExceptionError;
+
 public abstract class User implements Serializable{
     private String name;
     private String contactNumber;
@@ -37,9 +39,24 @@ public abstract class User implements Serializable{
         return this.email;
     }
 
-    public abstract void delete_request();
+    public void edit_request(User user) throws ExceptionError{
+        if(user.getName().isEmpty() && user.getContactNumber().isEmpty() && user.getEmail().isEmpty()) 
+            throw new ExceptionError("All the edit fields can't be null.");
+        if(this.getName() != user.getName() && !user.getName().isEmpty()){
+            this.setName(user.getName());
+        }
+
+        if(this.getContactNumber() != user.getContactNumber() && !user.getContactNumber().isEmpty()){ 
+            this.setContactNumber(user.getContactNumber());
+        }
+        
+        if(this.getEmail() != user.getEmail() && !user.getEmail().isEmpty()){
+            this.setEmail(user.getEmail());
+        }
+    }
+
+    public abstract void cancel_request();
     public abstract String[][] view_request();
-    public abstract void edit_request(Object user);
     public abstract void finish_ride();
     public abstract boolean ride_status_ongoing();
     public String toString(){

@@ -1,29 +1,26 @@
 package Users;
+import ExceptionError.*;
 
 import java.util.ArrayList;
 
+
 public class Customer extends User{
 
-    private double wallet;
     private Ride currentRide;
 
     public Customer(){
-        this.wallet = 0;
+
     }
     public Customer(String name, String contactNumber, String email){
         super(name,contactNumber,email);
-        this.wallet = 0;
-    }
-    public Customer(String name, String contactNumber, String email, double initial_amount){
-        super(name,contactNumber,email);
-        this.wallet = initial_amount;
+
     }
 
-    public void deposit(double amount){
-        this.wallet += amount;
-    }
 
-    public void request_ride(ArrayList<Rider> riders,String currentLocation, String toLocation){
+    public void request_ride(ArrayList<Rider> riders,String currentLocation, String toLocation) throws ExceptionError{
+        
+        if(currentLocation.equals(toLocation)) throw new ExceptionError("Current location and destination can't be same");
+        
         Rider u = null;
         for(Rider x: riders){
             if (!x.ride_status_ongoing() && currentLocation.equals(x.getLocation())){
@@ -32,8 +29,7 @@ public class Customer extends User{
         }
 
         if (u == null){
-            System.out.println("No rider found");
-            return;
+            throw new ExceptionError("Currently there are no riders avaialble in " + currentLocation);
         }
 
         currentRide = u.accept_ride(this,currentLocation,toLocation);
@@ -43,14 +39,14 @@ public class Customer extends User{
     public void finish_ride(){
         currentRide.update("Finished");
         currentRide.rider.updataLocation(currentRide.toLocation);
-        wallet -= currentRide.fare;
+
         currentRide = null;
         System.out.println("Ride finished");
 
     }
 
     @Override
-    public void delete_request() {
+    public void cancel_request() {
         currentRide.update("Cancelled");
         currentRide = null;
         System.out.println("The ride has been cancelled.");
@@ -60,9 +56,7 @@ public class Customer extends User{
     public String[][] view_request() {
         
         if(currentRide == null){
-            System.out.println("Not currently on a ride.");
-            String data[][] = {{"","", "", "","", ""}};
-            return data;
+            return null;
         }
         String data[][] = {{"1",currentRide.rider.toString(), currentRide.fromLocation, currentRide.toLocation, String.valueOf(currentRide.fare), currentRide.progress}};
         System.out.println("from: " + currentRide.fromLocation);
@@ -70,24 +64,6 @@ public class Customer extends User{
         System.out.println("Rider: " + currentRide.rider);
         return data;
 
-    }
-
-    @Override
-    public void edit_request(Object editedCustomer) {
-        Customer u = (Customer)editedCustomer;
-        if(this.getName() != u.getName() && !u.getName().isEmpty()){
-            this.setName(u.getName());
-        }
-
-        if(this.getContactNumber() != u.getContactNumber() && !u.getContactNumber().isEmpty()){ 
-            this.setContactNumber(u.getContactNumber());
-        }
-        
-        if(this.getEmail() != u.getEmail() && !u.getEmail().isEmpty()){
-            this.setEmail(u.getEmail());
-        }
-        
-        System.out.println("Updated Customer information");
     }
 
     @Override

@@ -26,109 +26,103 @@ public class App implements Serializable{
 
         User user = null;
 
-        while(!state.equals("exit")){
-
-            if(state.equals("homepage")){
-                state = gui.homepage();
-            }
-
-            else if(state.equals("create_customer")){
-                Customer customer = gui.create_customer();
-                if(customer == null){
-                    System.out.println("failed to create customer");
-                }
-                else {
-                    customers.add(customer);
+        while (!state.equals("exit")) {
+            switch (state) {
+                case "homepage":
+                    state = gui.homepage();
+                    break;
+        
+                case "create_customer":
+                    Customer customer = gui.create_customer();
+                    if (customer == null) {
+                        System.out.println("failed to create customer");
+                    } else {
+                        customers.add(customer);
+                        save_customers_to_bin();
+                    }
+                    state = "homepage";
+                    break;
+        
+                case "create_rider":
+                    Rider rider = gui.create_rider();
+                    if (rider == null) {
+                        System.out.println("failed to create rider");
+                    } else {
+                        riders.add(rider);
+                        save_riders_to_bin();
+                    }
+                    state = "homepage";
+                    break;
+        
+                case "login_customer":
+                    user = null;
+                    user = gui.login(customers);
+                    state = (user != null) ? "main_menu" : "homepage";
+                    break;
+        
+                case "login_rider":
+                    user = null;
+                    user = gui.login(riders);
+                    state = (user != null) ? "main_menu" : "homepage";
+                    break;
+        
+                case "delete_customer":
+                    state = gui.delete_user(customers);
                     save_customers_to_bin();
-                }
-                state = "homepage";
-            }
-
-            else if(state.equals("create_rider")){
-                Rider rider = gui.create_rider();
-                if(rider == null){
-                    System.out.println("failed to create rider");
-                }
-                else {
-                    riders.add(rider);
+                    break;
+        
+                case "delete_rider":
+                    state = gui.delete_user(riders);
                     save_riders_to_bin();
-                }
-                
-                state = "homepage";
+                    break;
+        
+                case "main_menu":
+                    state = gui.main_menu(user);
+                    break;
+        
+                case "request_ride":
+                    gui.request_rider((Customer) user, riders);
+                    state = "main_menu";
+                    break;
+        
+                case "finish_ride":
+                    user.finish_ride();
+                    save_customers_to_bin();
+                    save_riders_to_bin();
+                    state = "main_menu";
+                    break;
+        
+                case "cancel_request":
+                    user.cancel_request();
+                    save_customers_to_bin();
+                    save_riders_to_bin();
+                    state = "main_menu";
+                    break;
+        
+                case "edit_profile":
+                    gui.edit_user(user);
+                    save_riders_to_bin();
+                    save_customers_to_bin();
+                    state = "main_menu";
+                    break;
+        
+                case "view_ride":
+                    state = gui.view_rides(user);
+                    break;
+        
+                case "view_profile":
+                    gui.view_profile(user);
+                    state = "main_menu";
+                    break;
+        
+                default:
+                    System.out.println(state);
+                    state = "exit";
+                    break;
             }
-
-            else if(state.equals("login_customer")){
-                user = null;
-                user = gui.login(customers);
-                if(user != null) state = "main_menu";
-                else state = "homepage";
-            }
-
-            else if(state.equals("login_rider")){
-                user = null;
-                user = gui.login(riders);
-                if(user != null) state = "main_menu";
-                else state = "homepage";
-            }
-
-            else if(state.equals("delete_customer")){
-                state = gui.delete_user (customers);
-                save_customers_to_bin();
-            }
-
-            else if(state.equals("delete_rider")){
-                state = gui.delete_user (riders);
-                save_riders_to_bin();
-            }
-
-            else if(state.equals("main_menu")){
-                state = gui.main_menu(user);
-            }
-    
-            else if(state.equals("request_ride")){
-                gui.request_rider((Customer)user,riders);
-                state = "main_menu";
-    
-            }
-    
-            else if(state.equals("finish_ride")){
-                user.finish_ride();
-                save_customers_to_bin();
-                save_riders_to_bin();
-                state = "main_menu";
-            }
-    
-            else if(state.equals("delete_request")){
-                user.delete_request();
-                save_customers_to_bin();
-                save_riders_to_bin();
-                state = "main_menu";
-            }
-    
-            else if(state.equals("edit_profile")){
-                gui.edit_user(user);
-                save_riders_to_bin();
-                save_customers_to_bin();
-                state = "main_menu";
-            }
-    
-            else if(state.equals("view_ride")){
-                state = gui.view_rides(user);
-            }
-
-            else if(state.equals("view_profile")){
-                gui.view_profile(user);
-                state = "main_menu";
-            }
-
-            else{
-                System.out.println(state);
-                state = "exit";
-            }
-    
         }
         
-    }
+    } //end main
 
 
     public static void save_riders_to_bin(){

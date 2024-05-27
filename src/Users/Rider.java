@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 public class Rider extends User{
 
-    private String vehical;
-    private String vehicalModel;
-    private int numberPlate;
     private String currentLocation;
 
     private ArrayList<Ride> rides;
@@ -28,11 +25,7 @@ public class Rider extends User{
 
     public Rider(String name, String contactNumber, String email,String vehical, String vehicalModel, int numberPlate, String currentLocation){
         super(name,contactNumber,email);
-        this.vehical = vehical;
-        this.vehicalModel = vehicalModel;
-        this.numberPlate = numberPlate;
         this.currentLocation = currentLocation;
-
         rides = new ArrayList<Ride>();
     }
 
@@ -63,11 +56,11 @@ public class Rider extends User{
 
 
     @Override
-    public void delete_request() {
+    public void cancel_request() {
         Ride ride = rides.get(rides.size()-1);
         if(ride.progress.equals("Ongoing")){
             ride.update("cancelled");
-            ride.customer.delete_request();
+            ride.customer.cancel_request();
         }
         else{
             System.out.println("no ongoing rides");
@@ -78,7 +71,7 @@ public class Rider extends User{
     public String[][] view_request() {
         if(rides.size() == 0){
             System.out.println("The Rider did not make any rides yet.");
-            String data[][] = {{"","", "", "","", ""}};
+            String data[][] = {};
             return data;
         }
         String data[][] = new String[rides.size()][6];
@@ -91,21 +84,6 @@ public class Rider extends User{
             data[i][5] = rides.get(i).progress;
         }
         return data;
-    }
-
-    @Override
-    public void edit_request(Object editedRider) {
-        Rider r = (Rider)editedRider;
-        if(this.getName() != r.getName() && !r.getName().isEmpty()) 
-            this.setName(r.getName());
-
-        if(this.getContactNumber() != r.getContactNumber() && !r.getContactNumber().isEmpty()) 
-            this.setContactNumber(r.getContactNumber());
-        
-        if(this.getEmail() != r.getEmail() && !r.getEmail().isEmpty())
-            this.setEmail(r.getEmail());
-        
-        System.out.println("Updated Rider infromation");
     }
 
     public Ride last_ride() {
