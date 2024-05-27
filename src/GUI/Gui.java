@@ -19,7 +19,7 @@ public class Gui{
     
     public String main_menu(User user) {
         state = "main_menu";
-        JDialog dialog = new JDialog((Frame) null, "Home", true); // Create a modal JDialog
+        JDialog dialog = new JDialog((Frame) null, "Main Menu", true); // Create a modal JDialog
         dialog.setLayout(new GridLayout(3, 2)); // Grid layout with 3 rows and 2 columns
     
         // Button 1
@@ -105,14 +105,12 @@ public class Gui{
     
         String[][] data = user.view_request();
 
-        if(data == null){
-            JOptionPane.showMessageDialog(dialog, "Currently not on a ride");
-            System.out.println("Currently not on a ride");
-            return "main_menu";
-        }
-        else if(data.length == 0){
-            JOptionPane.showMessageDialog(dialog, "The Rider haven't made any ride yet.");
-            System.out.println("The Rider haven't made any rides yet.");
+        if(data.length == 0){
+            String msg;
+            if(user instanceof Customer) msg = "Currently not on a ride";
+            else msg = "The Rider haven't made any ride yet.";
+            JOptionPane.showMessageDialog(dialog, msg);
+            System.out.println(msg);
         }
 
         String auth;
@@ -172,7 +170,7 @@ public class Gui{
 
 
     public void edit_user(User user) {
-        JDialog dialog = new JDialog((Frame) null, "Edit Ride details", true); // Create a modal JDialog
+        JDialog dialog = new JDialog((Frame) null, "Edit User details", true); // Create a modal JDialog
     
         JLabel nameLabel = new JLabel("Edit Name: ");
         JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
@@ -337,54 +335,65 @@ public class Gui{
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
     }
 
-    
     public void view_profile(User user) {
         JDialog dialog = new JDialog((Frame) null, "View Profile", true); // Create a modal JDialog
+        dialog.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
     
+        // Load the appropriate image
+        ImageIcon imageIcon;
+        if (user instanceof Rider) {
+            imageIcon = new ImageIcon("pic\\rider_avt.png"); // Provide the correct path to the rider photo
+        } else {
+            imageIcon = new ImageIcon("pic\\\\customer_avt.png"); // Provide the correct path to the customer photo
+        }
+    
+        // Add the photo label
+        JLabel photoLabel = new JLabel(imageIcon);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER;
+        dialog.add(photoLabel, gbc);
+        gbc.gridwidth = 1; // Reset gridwidth
+    
+        // Add user details
         JLabel nameLabel = new JLabel("Name: " + user.getName());
         JLabel contactLabel = new JLabel("Contact: " + user.getContactNumber());
         JLabel emailLabel = new JLabel("Email: " + user.getEmail());
-
+    
         JLabel locationLabel = null;
         if (user instanceof Rider) {
             Rider rider = (Rider) user;
             locationLabel = new JLabel("Current Location: " + rider.getLocation());
         }
     
-        JButton closeButton = new JButton("Back");
-    
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-    
         // Position the name label
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        panel.add(nameLabel, gbc);
+        dialog.add(nameLabel, gbc);
     
         // Position the contact label
-        gbc.gridy = 1;
-        panel.add(contactLabel, gbc);
-
-        // Position the email label
         gbc.gridy = 2;
-        panel.add(emailLabel, gbc);
-
-
+        dialog.add(contactLabel, gbc);
+    
+        // Position the email label
+        gbc.gridy = 3;
+        dialog.add(emailLabel, gbc);
+    
         // Position the location label if the user is a Rider
-
         if (locationLabel != null) {
-            gbc.gridy = 3;
-            panel.add(locationLabel, gbc);
+            gbc.gridy = 4;
+            dialog.add(locationLabel, gbc);
         }
     
         // Position the close button
-        gbc.gridy = 4;
+        JButton closeButton = new JButton("Back");
+        gbc.gridy = 5;
         gbc.gridwidth = 2; // Span across two columns
-        gbc.insets = new Insets(20, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(closeButton, gbc);
+        dialog.add(closeButton, gbc);
     
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -393,7 +402,6 @@ public class Gui{
             }
         });
     
-        dialog.add(panel);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(600, 400);
         dialog.setLocationRelativeTo(null); // Center the dialog
@@ -403,7 +411,7 @@ public class Gui{
 
     public User login(ArrayList<? extends User> users) {
         staticUser = null;
-        JDialog dialog = new JDialog((Frame) null, "Request Rider", true); // Create a modal JDialog
+        JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
             
         JLabel nameLabel = new JLabel("Name: ");
         JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
@@ -469,7 +477,7 @@ public class Gui{
    
     public String homepage(){
         state = "exit";
-        JDialog dialog = new JDialog((Frame) null, "Main Menu", true); // Create a modal JDialog
+        JDialog dialog = new JDialog((Frame) null, "Home", true); // Create a modal JDialog
         dialog.setLayout(new GridLayout(2, 3)); // Grid layout with 3 rows and 2 columns
     
         // Button 1
@@ -723,7 +731,11 @@ public class Gui{
 
     public String delete_user(ArrayList<? extends User> users) {
         state = "homepage";
-        JDialog dialog = new JDialog((Frame) null, "View Ride Details", true); // Create a modal JDialog
+        if(users.size() == 0){
+            JOptionPane.showMessageDialog(null, "No user to delete");
+            return state;
+        }
+        JDialog dialog = new JDialog((Frame) null, "Delete User", true); // Create a modal JDialog
     
         String[][] data = new String[users.size()][5];
 

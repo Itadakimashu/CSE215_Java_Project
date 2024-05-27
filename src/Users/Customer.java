@@ -56,7 +56,8 @@ public class Customer extends User{
     public String[][] view_request() {
         
         if(currentRide == null){
-            return null;
+            String data[][] = {};
+            return data;
         }
         String data[][] = {{"1",currentRide.rider.toString(), currentRide.fromLocation, currentRide.toLocation, String.valueOf(currentRide.fare), currentRide.progress}};
         System.out.println("from: " + currentRide.fromLocation);

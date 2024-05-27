@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Rider extends User{
 
     private String currentLocation;
-
     private ArrayList<Ride> rides;
 
     public Rider(){

@@ -27,7 +27,9 @@ public class App implements Serializable{
         User user = null;
 
         while (!state.equals("exit")) {
+            
             switch (state) {
+                
                 case "homepage":
                     state = gui.homepage();
                     break;
