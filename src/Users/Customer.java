@@ -13,7 +13,11 @@ public class Customer extends User{
     }
     public Customer(String name, String contactNumber, String email){
         super(name,contactNumber,email);
+    }
 
+    
+    public Customer(String name, String contactNumber, String email,char[] pass){
+        super(name,contactNumber,email,pass);
     }
 
 

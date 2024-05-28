@@ -22,11 +22,13 @@ public class Rider extends User{
         rides = new ArrayList<Ride>();
     }
 
-    public Rider(String name, String contactNumber, String email,String vehical, String vehicalModel, int numberPlate, String currentLocation){
-        super(name,contactNumber,email);
+    public Rider(String name, String contactNumber, String email, String currentLocation,char[] pass){
+        super(name,contactNumber,email,pass);
         this.currentLocation = currentLocation;
         rides = new ArrayList<Ride>();
     }
+
+    
 
     public void updataLocation(String location){
         this.currentLocation = location;

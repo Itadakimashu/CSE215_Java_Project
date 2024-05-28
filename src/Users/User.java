@@ -8,6 +8,7 @@ public abstract class User implements Serializable{
     private String name;
     private String contactNumber;
     private String email;
+    private char[] pass;
 
     User(){}
 
@@ -15,6 +16,13 @@ public abstract class User implements Serializable{
         this.name = name;
         this.contactNumber = contactNumber;
         this.email = email;
+    }
+
+    User(String name, String contactNumber, String email,char[] pass){
+        this.name = name;
+        this.contactNumber = contactNumber;
+        this.email = email;
+        this.pass = pass;
     }
 
     public void setName(String name){
@@ -37,6 +45,14 @@ public abstract class User implements Serializable{
     }
     public String getEmail(){
         return this.email;
+    }
+
+    public void setPass(char[] pass){
+        this.pass = pass;
+    }
+
+    public char[] getPass(){
+        return pass;
     }
 
     public void edit_request(User user) throws ExceptionError{

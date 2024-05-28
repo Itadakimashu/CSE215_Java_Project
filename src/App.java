@@ -18,8 +18,10 @@ public class App implements Serializable{
 
     public static void main(String[] args){
 
+        
         load_riders_from_bin();
         load_customers_from_bin();
+
         
         // Customer c = new Customer();
         // Rider r = new Rider();

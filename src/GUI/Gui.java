@@ -7,6 +7,7 @@ import Users.*;
 import ExceptionError.ExceptionError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 
@@ -410,70 +411,144 @@ public class Gui{
 
 
     public User login(ArrayList<? extends User> users) {
-        staticUser = null;
-        JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
-            
-        JLabel nameLabel = new JLabel("Name: ");
-        JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
-        
-        JLabel emailLabel = new JLabel("Email: ");
-        JTextField textFieldEmail = new JTextField(10);
-        
-        JButton button = new JButton("Login");
-    
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        
-        // Position the "From Location" label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10); // Padding
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(nameLabel, gbc);
-    
-        gbc.gridx = 1;
-        panel.add(textFieldName, gbc);
-    
-        // Position the "To Location" label and text field
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(emailLabel, gbc);
-    
-        gbc.gridx = 1;
-        panel.add(textFieldEmail, gbc);
-        
-        // Position the button
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2; // Span across two columns
-        gbc.insets = new Insets(20, 10, 10, 10); // Padding
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(button, gbc);
-        
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = textFieldName.getText();
-                String email = textFieldEmail.getText();
-    
-                for (User user : users) {
-                    if (user.getName().equals(name) && user.getEmail().equals(email)) {
-                        System.out.println("Login successful!");
-                        staticUser = user;
-                    }
-                }
-                dialog.dispose(); // Close the dialog
-            }
-        });
-    
-        dialog.add(panel);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(600, 400);
-        dialog.setLocationRelativeTo(null); // Center the dialog
-        dialog.setVisible(true); // Show the dialog and block until it's dismissed
+    staticUser = null;
+    JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
 
-        return staticUser;
-    }
+    JLabel nameLabel = new JLabel("Name: ");
+    JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
+
+    JLabel passwordLabel = new JLabel("Password: ");
+    JPasswordField passwordField = new JPasswordField(10);
+
+    JButton button = new JButton("Login");
+
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+
+    // Position the "Name" label and text field
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.insets = new Insets(10, 10, 10, 10); // Padding
+    gbc.anchor = GridBagConstraints.WEST;
+    panel.add(nameLabel, gbc);
+
+    gbc.gridx = 1;
+    panel.add(textFieldName, gbc);
+
+    // Position the "Password" label and password field
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    panel.add(passwordLabel, gbc);
+
+    gbc.gridx = 1;
+    panel.add(passwordField, gbc);
+
+    // Position the button
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.gridwidth = 2; // Span across two columns
+    gbc.insets = new Insets(20, 10, 10, 10); // Padding
+    gbc.anchor = GridBagConstraints.CENTER;
+    panel.add(button, gbc);
+
+    button.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String name = textFieldName.getText();
+            char[] password = passwordField.getPassword();
+            boolean loginSuccessful = false;
+
+            for (User user : users) {
+                if (user.getName().equals(name) && Arrays.equals(user.getPass(), password)) {
+                    System.out.println("Login successful!");
+                    staticUser = user;
+                    break;
+                }
+            }
+
+            if (!loginSuccessful) {
+                JOptionPane.showMessageDialog(dialog, "Invalid name or password. Please try again.");
+            }
+
+            dialog.dispose(); // Close the dialog
+        }
+    });
+
+    dialog.add(panel);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.setSize(600, 400);
+    dialog.setLocationRelativeTo(null); // Center the dialog
+    dialog.setVisible(true); // Show the dialog and block until it's dismissed
+
+    return staticUser;
+}
+
+
+    // public User login(ArrayList<? extends User> users) {
+    //     staticUser = null;
+    //     JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
+            
+    //     JLabel nameLabel = new JLabel("Name: ");
+    //     JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
+        
+    //     JLabel emailLabel = new JLabel("Email: ");
+    //     JTextField textFieldEmail = new JTextField(10);
+        
+    //     JButton button = new JButton("Login");
+    
+    //     JPanel panel = new JPanel(new GridBagLayout());
+    //     GridBagConstraints gbc = new GridBagConstraints();
+        
+    //     // Position the "From Location" label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 0;
+    //     gbc.insets = new Insets(10, 10, 10, 10); // Padding
+    //     gbc.anchor = GridBagConstraints.WEST;
+    //     panel.add(nameLabel, gbc);
+    
+    //     gbc.gridx = 1;
+    //     panel.add(textFieldName, gbc);
+    
+    //     // Position the "To Location" label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 1;
+    //     panel.add(emailLabel, gbc);
+    
+    //     gbc.gridx = 1;
+    //     panel.add(textFieldEmail, gbc);
+        
+    //     // Position the button
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 2;
+    //     gbc.gridwidth = 2; // Span across two columns
+    //     gbc.insets = new Insets(20, 10, 10, 10); // Padding
+    //     gbc.anchor = GridBagConstraints.CENTER;
+    //     panel.add(button, gbc);
+        
+    //     button.addActionListener(new ActionListener() {
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             String name = textFieldName.getText();
+    //             String email = textFieldEmail.getText();
+    
+    //             for (User user : users) {
+    //                 if (user.getName().equals(name) && user.getEmail().equals(email)) {
+    //                     System.out.println("Login successful!");
+    //                     staticUser = user;
+    //                 }
+    //             }
+    //             dialog.dispose(); // Close the dialog
+    //         }
+    //     });
+    
+    //     dialog.add(panel);
+    //     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    //     dialog.setSize(600, 400);
+    //     dialog.setLocationRelativeTo(null); // Center the dialog
+    //     dialog.setVisible(true); // Show the dialog and block until it's dismissed
+
+    //     return staticUser;
+    // }
    
     public String homepage(){
         state = "exit";
@@ -552,8 +627,7 @@ public class Gui{
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
         return state;
     }
-
-
+    
     public Customer create_customer() {
         staticCustomer = null;
         JDialog dialog = new JDialog((Frame) null, "Create Customer", true); // Create a modal JDialog
@@ -567,6 +641,9 @@ public class Gui{
         JLabel emailLabel = new JLabel("Email: ");
         JTextField textFieldEmail = new JTextField(10); // Text field for email
     
+        JLabel passwordLabel = new JLabel("Password: ");
+        JPasswordField passwordField = new JPasswordField(10); // Password field
+    
         JButton createButton = new JButton("Create"); // Button to create user
     
         JPanel panel = new JPanel(new GridBagLayout());
@@ -597,7 +674,14 @@ public class Gui{
     
         gbc.gridx = 1;
         panel.add(textFieldEmail, gbc);
-
+    
+        // Position the password label and text field
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(passwordLabel, gbc);
+    
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
     
         // Position the create button
         gbc.gridx = 0;
@@ -613,17 +697,18 @@ public class Gui{
                 String name = textFieldName.getText();
                 String contactNumber = textFieldContactNumber.getText();
                 String email = textFieldEmail.getText();
-
-                if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty())
-                    staticCustomer = new Customer(name,contactNumber,email);
-
-                if(staticCustomer != null) JOptionPane.showMessageDialog(dialog, "Customer created successfully");
-                else JOptionPane.showMessageDialog(dialog, "Couldn't create customer. Please check all information are provided.");
-                
-                // Assuming User is an abstract class or interface
-                // User user = new User(name, contactNumber, email, location);
-                // Assuming you have a method to add the user
-                // add_user(user);
+                char[] password = passwordField.getPassword();
+    
+                if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty() && password.length != 0) {
+                    staticCustomer = new Customer(name, contactNumber, email, password);
+                }
+    
+                if(staticCustomer != null) {
+                    JOptionPane.showMessageDialog(dialog, "Customer created successfully");
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Couldn't create customer. Please check all information is provided.");
+                }
+    
                 dialog.dispose(); // Close the dialog
             }
         });
@@ -636,7 +721,6 @@ public class Gui{
         return staticCustomer;
     }
     
-
     public Rider create_rider() {
         staticRider = null;
         JDialog dialog = new JDialog((Frame) null, "Create Rider", true); // Create a modal JDialog
@@ -649,11 +733,13 @@ public class Gui{
     
         JLabel emailLabel = new JLabel("Email: ");
         JTextField textFieldEmail = new JTextField(10); // Text field for email
-        
+    
         JLabel locationLabel = new JLabel("Location: ");
-        String[] locations = {"Gaza", "West Bank", "Rafa", "Al Aqsa","Haifa"};
+        String[] locations = {"Gaza", "West Bank", "Rafa", "Al Aqsa", "Haifa"};
         JComboBox<String> locationComboBox = new JComboBox<>(locations); // Dropdown list for location selection
-
+    
+        JLabel passwordLabel = new JLabel("Password: ");
+        JPasswordField passwordField = new JPasswordField(10); // Password field
     
         JButton createButton = new JButton("Create"); // Button to create user
     
@@ -685,18 +771,26 @@ public class Gui{
     
         gbc.gridx = 1;
         panel.add(textFieldEmail, gbc);
-        
+    
         // Position the location label and text field
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel.add(locationLabel, gbc);
-
+    
         gbc.gridx = 1;
         panel.add(locationComboBox, gbc);
     
-        // Position the create button
+        // Position the password label and text field
         gbc.gridx = 0;
         gbc.gridy = 4;
+        panel.add(passwordLabel, gbc);
+    
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
+    
+        // Position the create button
+        gbc.gridx = 0;
+        gbc.gridy = 5;
         gbc.gridwidth = 2; // Span across two columns
         gbc.insets = new Insets(20, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.CENTER;
@@ -709,12 +803,17 @@ public class Gui{
                 String contactNumber = textFieldContactNumber.getText();
                 String email = textFieldEmail.getText();
                 String location = (String) locationComboBox.getSelectedItem();
-
-                if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty() && !location.isEmpty())
-                    staticRider = new Rider(name,contactNumber,email,location);
-
-                if(staticRider != null) JOptionPane.showMessageDialog(dialog, "Rider created successfully");
-                else JOptionPane.showMessageDialog(dialog, "Couldn't create Rider. Please check all information are provided.");
+                char[] password = passwordField.getPassword();
+    
+                if (!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty() && location != null && password.length > 0) {
+                    staticRider = new Rider(name, contactNumber, email, location, password);
+                }
+    
+                if (staticRider != null) {
+                    JOptionPane.showMessageDialog(dialog, "Rider created successfully");
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Couldn't create Rider. Please check all information is provided.");
+                }
     
                 dialog.dispose(); // Close the dialog
             }
@@ -727,6 +826,98 @@ public class Gui{
         dialog.setVisible(true); // Show the dialog and block until it's dismissed
         return staticRider;
     }
+    
+
+    // public Rider create_rider() {
+    //     staticRider = null;
+    //     JDialog dialog = new JDialog((Frame) null, "Create Rider", true); // Create a modal JDialog
+    
+    //     JLabel nameLabel = new JLabel("Name: ");
+    //     JTextField textFieldName = new JTextField(10); // Text field for name
+    
+    //     JLabel contactLabel = new JLabel("Contact Number: ");
+    //     JTextField textFieldContactNumber = new JTextField(10); // Text field for contact number
+    
+    //     JLabel emailLabel = new JLabel("Email: ");
+    //     JTextField textFieldEmail = new JTextField(10); // Text field for email
+        
+    //     JLabel locationLabel = new JLabel("Location: ");
+    //     String[] locations = {"Gaza", "West Bank", "Rafa", "Al Aqsa","Haifa"};
+    //     JComboBox<String> locationComboBox = new JComboBox<>(locations); // Dropdown list for location selection
+
+    
+    //     JButton createButton = new JButton("Create"); // Button to create user
+    
+    //     JPanel panel = new JPanel(new GridBagLayout());
+    //     GridBagConstraints gbc = new GridBagConstraints();
+    
+    //     // Position the name label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 0;
+    //     gbc.insets = new Insets(10, 10, 10, 10); // Padding
+    //     gbc.anchor = GridBagConstraints.WEST;
+    //     panel.add(nameLabel, gbc);
+    
+    //     gbc.gridx = 1;
+    //     panel.add(textFieldName, gbc);
+    
+    //     // Position the contact number label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 1;
+    //     panel.add(contactLabel, gbc);
+    
+    //     gbc.gridx = 1;
+    //     panel.add(textFieldContactNumber, gbc);
+    
+    //     // Position the email label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 2;
+    //     panel.add(emailLabel, gbc);
+    
+    //     gbc.gridx = 1;
+    //     panel.add(textFieldEmail, gbc);
+        
+    //     // Position the location label and text field
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 3;
+    //     panel.add(locationLabel, gbc);
+
+    //     gbc.gridx = 1;
+    //     panel.add(locationComboBox, gbc);
+    
+    //     // Position the create button
+    //     gbc.gridx = 0;
+    //     gbc.gridy = 4;
+    //     gbc.gridwidth = 2; // Span across two columns
+    //     gbc.insets = new Insets(20, 10, 10, 10); // Padding
+    //     gbc.anchor = GridBagConstraints.CENTER;
+    //     panel.add(createButton, gbc);
+    
+    //     createButton.addActionListener(new ActionListener() {
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             String name = textFieldName.getText();
+    //             String contactNumber = textFieldContactNumber.getText();
+    //             String email = textFieldEmail.getText();
+    //             String location = (String) locationComboBox.getSelectedItem();
+
+    //             if(!name.isEmpty() && !contactNumber.isEmpty() && !email.isEmpty() && !location.isEmpty())
+    //                 staticRider = new Rider(name,contactNumber,email,location);
+
+    //             if(staticRider != null) JOptionPane.showMessageDialog(dialog, "Rider created successfully");
+    //             else JOptionPane.showMessageDialog(dialog, "Couldn't create Rider. Please check all information are provided.");
+    
+    //             dialog.dispose(); // Close the dialog
+    //         }
+    //     });
+    
+    //     dialog.add(panel);
+    //     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    //     dialog.setSize(600, 400);
+    //     dialog.setLocationRelativeTo(null); // Center the dialog
+    //     dialog.setVisible(true); // Show the dialog and block until it's dismissed
+    //     return staticRider;
+    // }
 
 
     public String delete_user(ArrayList<? extends User> users) {
