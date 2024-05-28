@@ -414,7 +414,7 @@ public class Gui{
     staticUser = null;
     JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
 
-    JLabel nameLabel = new JLabel("Name: ");
+    JLabel emailLabel = new JLabel("Email: ");
     JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
 
     JLabel passwordLabel = new JLabel("Password: ");
@@ -430,7 +430,7 @@ public class Gui{
     gbc.gridy = 0;
     gbc.insets = new Insets(10, 10, 10, 10); // Padding
     gbc.anchor = GridBagConstraints.WEST;
-    panel.add(nameLabel, gbc);
+    panel.add(emailLabel, gbc);
 
     gbc.gridx = 1;
     panel.add(textFieldName, gbc);
@@ -454,14 +454,15 @@ public class Gui{
     button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String name = textFieldName.getText();
+            String email = textFieldName.getText();
             char[] password = passwordField.getPassword();
             boolean loginSuccessful = false;
 
             for (User user : users) {
-                if (user.getName().equals(name) && Arrays.equals(user.getPass(), password)) {
+                if (user.getEmail().equals(email) && Arrays.equals(user.getPass(), password)) {
                     System.out.println("Login successful!");
                     staticUser = user;
+                    loginSuccessful = true;
                     break;
                 }
             }
@@ -483,73 +484,6 @@ public class Gui{
     return staticUser;
 }
 
-
-    // public User login(ArrayList<? extends User> users) {
-    //     staticUser = null;
-    //     JDialog dialog = new JDialog((Frame) null, "Login User", true); // Create a modal JDialog
-            
-    //     JLabel nameLabel = new JLabel("Name: ");
-    //     JTextField textFieldName = new JTextField(10); // Pre-fill with current user data
-        
-    //     JLabel emailLabel = new JLabel("Email: ");
-    //     JTextField textFieldEmail = new JTextField(10);
-        
-    //     JButton button = new JButton("Login");
-    
-    //     JPanel panel = new JPanel(new GridBagLayout());
-    //     GridBagConstraints gbc = new GridBagConstraints();
-        
-    //     // Position the "From Location" label and text field
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 0;
-    //     gbc.insets = new Insets(10, 10, 10, 10); // Padding
-    //     gbc.anchor = GridBagConstraints.WEST;
-    //     panel.add(nameLabel, gbc);
-    
-    //     gbc.gridx = 1;
-    //     panel.add(textFieldName, gbc);
-    
-    //     // Position the "To Location" label and text field
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 1;
-    //     panel.add(emailLabel, gbc);
-    
-    //     gbc.gridx = 1;
-    //     panel.add(textFieldEmail, gbc);
-        
-    //     // Position the button
-    //     gbc.gridx = 0;
-    //     gbc.gridy = 2;
-    //     gbc.gridwidth = 2; // Span across two columns
-    //     gbc.insets = new Insets(20, 10, 10, 10); // Padding
-    //     gbc.anchor = GridBagConstraints.CENTER;
-    //     panel.add(button, gbc);
-        
-    //     button.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             String name = textFieldName.getText();
-    //             String email = textFieldEmail.getText();
-    
-    //             for (User user : users) {
-    //                 if (user.getName().equals(name) && user.getEmail().equals(email)) {
-    //                     System.out.println("Login successful!");
-    //                     staticUser = user;
-    //                 }
-    //             }
-    //             dialog.dispose(); // Close the dialog
-    //         }
-    //     });
-    
-    //     dialog.add(panel);
-    //     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    //     dialog.setSize(600, 400);
-    //     dialog.setLocationRelativeTo(null); // Center the dialog
-    //     dialog.setVisible(true); // Show the dialog and block until it's dismissed
-
-    //     return staticUser;
-    // }
-   
     public String homepage(){
         state = "exit";
         JDialog dialog = new JDialog((Frame) null, "Home", true); // Create a modal JDialog
